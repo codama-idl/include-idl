@@ -25,9 +25,7 @@ pub fn main() -> Result<(), Error> {
         Some(Commands::Parse { path }) => {
             let buffer = std::fs::read(path).expect("Could not read file.");
             if let Ok((idl_type, idl_data)) = parse_idl_from_program_binary(&buffer) {
-                println!("Program IDL ({idl_type})");
-                println!("============================");
-                println!("\n{idl_data:#?}");
+                println!("\n[\"{idl_type}\", {idl_data}]");
             } else {
                 println!("Could not find IDL in program binary");
             }

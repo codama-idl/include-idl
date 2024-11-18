@@ -59,7 +59,15 @@ impl std::str::FromStr for IdlType {
 /// Parses the IDL data from the program binary.
 #[cfg(feature = "parse")]
 pub fn parse_idl_from_program_binary(buffer: &[u8]) -> goblin::error::Result<(IdlType, Value)> {
-    let elf = Elf::parse(buffer)?;
+    let elf = match Elf::parse(buffer) {
+        Ok(elf) => elf,
+        Err(e) => {
+            println!("Error parsing ELF: {}", e);
+            return Err(goblin::error::Error::Malformed(
+                "Could not parse ELF".to_string(),
+            ));
+        }
+    };
 
     let mut idl_type: Option<IdlType> = None;
     let mut idl_json: Option<Value> = None;
